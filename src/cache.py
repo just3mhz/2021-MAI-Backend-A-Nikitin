@@ -1,41 +1,45 @@
+from collections import namedtuple
+
+from typing import Dict
+
 from llist import LinkedList, Node
 
 
 class LRUCache:
+    Item = namedtuple("Item", "key value")
+
     def __init__(self, capacity: int = 16):
         self._capacity = capacity
         self._items = LinkedList()
-        self._nodes_hashmap: dict[str, Node] = {}
+        self._nodes_hashmap: Dict[str, Node] = {}
 
     def get(self, key: str) -> str:
-        node = self._nodes_hashmap.get(key, None)
-        if node is None:
-            return ""
-        return node.value[1]
+        if node := self._nodes_hashmap.get(key, None):
+            self._remove(node)
+            self._insert(node.value.key, node.value.value)
+            return node.value.key
+        # TODO: Is it necessary to add (key, "") to cache ?
+        return ""
 
     def set(self, key: str, value: str) -> None:
-        node = self._nodes_hashmap.get(key, None)
-
-        if node is not None:
-            self._items.erase(node)
-            self._items.insert((key, value), self._items.begin())
-            return
-
-        self._items.insert((key, value), self._items.begin())
-        self._nodes_hashmap[key] = self._items.begin()
-
-        while len(self._items) > self._capacity:
-            last_used = self._items.end().prev
-            del self._nodes_hashmap[last_used.value[0]]
-            self._items.erase(last_used)
+        if node := self._nodes_hashmap.get(key, None):
+            self._remove(node)
+        self._insert(key, value)
+        self._clean()
 
     def rem(self, key: str) -> None:
-        node = self._nodes_hashmap.get(key, None)
-        if node is not None:
-            del self._nodes_hashmap[key]
-            self._items.erase(node)
+        if node := self._nodes_hashmap.get(key, None):
+            self._remove(node)
 
-    def _reuse(self, node, new_value):
+    def _insert(self, key: str, value: str):
+        self._items.insert(self.Item(key, value))
+        self._nodes_hashmap[key] = self._items.begin()
+
+    def _clean(self):
+        while len(self._items) > self._capacity:
+            last_used = self._items.end().prev
+            self._remove(last_used)
+
+    def _remove(self, node: Node):
         self._items.erase(node)
-        self._items.insert((node.value[0], new_value), self._items.begin())
-        self._nodes_hashmap[node.value[0]] = self._items.begin()
+        del self._nodes_hashmap[node.value.key]
