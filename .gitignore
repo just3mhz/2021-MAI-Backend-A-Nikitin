@@ -4,3 +4,5 @@ venv/
 *.swo
 *.swp
 
+.idea/
+
