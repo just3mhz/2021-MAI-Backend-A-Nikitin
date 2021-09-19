@@ -1,0 +1,20 @@
+user ${NGINX_USER};
+
+worker_processes 2;
+
+events {
+    worker_connections 64;
+}
+
+http {
+    server {
+        listen 80;
+        server_name localhost;
+
+        location /public/ {
+            root ${NGINX_PUBLIC};
+        }
+
+    }
+}
+
