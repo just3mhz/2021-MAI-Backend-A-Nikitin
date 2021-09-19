@@ -12,7 +12,11 @@ http {
         server_name localhost;
 
         location /public/ {
-            root ${NGINX_PUBLIC};
+            alias ${PUBLIC};
+        }
+
+        location /wsgi/ {
+            proxy_pass ${GUNICORN_ADDRESS};
         }
 
     }
