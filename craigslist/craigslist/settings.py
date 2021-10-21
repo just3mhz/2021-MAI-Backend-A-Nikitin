@@ -2,6 +2,16 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+try:
+    from .local_settings import DATABASES
+except ImportError:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+
 SECRET_KEY = 'd)m12p%_c)b#v_+v90*8m__v1_wb+(g^a-6)$5qsb2kxfs9t*('
 
 DEBUG = True
@@ -45,13 +55,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'craigslist.wsgi.application'
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
