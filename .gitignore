@@ -6,3 +6,5 @@ venv/
 
 .idea/
 
+craigslist/db.sqlite3
+
