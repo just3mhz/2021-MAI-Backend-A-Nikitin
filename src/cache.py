@@ -1,45 +1,28 @@
-from collections import namedtuple
-
-from typing import Dict
-
-from llist import LinkedList, Node
+from collections import OrderedDict
 
 
 class LRUCache:
-    Item = namedtuple("Item", "key value")
 
     def __init__(self, capacity: int = 16):
         self._capacity = capacity
-        self._items = LinkedList()
-        self._nodes_hashmap: Dict[str, Node] = {}
+        self._cache = OrderedDict()
 
     def get(self, key: str) -> str:
-        if node := self._nodes_hashmap.get(key, None):
-            self._remove(node)
-            self._insert(node.value.key, node.value.value)
-            return node.value.key
-        # TODO: Is it necessary to add (key, "") to cache ?
+        if value := self._cache.get(key, None):
+            self._cache.move_to_end(key)
+            return value
         return ""
 
     def set(self, key: str, value: str) -> None:
-        if node := self._nodes_hashmap.get(key, None):
-            self._remove(node)
-        self._insert(key, value)
-        self._clean()
+        if key in self._cache:
+            del self._cache[key]
+        self._cache[key] = value
+        self._clean_up()
 
     def rem(self, key: str) -> None:
-        if node := self._nodes_hashmap.get(key, None):
-            self._remove(node)
+        if key in self._cache:
+            del self._cache[key]
 
-    def _insert(self, key: str, value: str):
-        self._items.insert(self.Item(key, value))
-        self._nodes_hashmap[key] = self._items.begin()
-
-    def _clean(self):
-        while len(self._items) > self._capacity:
-            last_used = self._items.end().prev
-            self._remove(last_used)
-
-    def _remove(self, node: Node):
-        self._items.erase(node)
-        del self._nodes_hashmap[node.value.key]
+    def _clean_up(self):
+        while len(self._cache) > self._capacity:
+            self._cache.popitem(last=False)
