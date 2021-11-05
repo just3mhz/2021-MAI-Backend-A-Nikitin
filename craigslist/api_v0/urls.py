@@ -6,7 +6,7 @@ from .views import add_advertisement
 from .views import user
 
 urlpatterns = [
-    path('category/<int:category>', by_category),
+    path('category/<int:category_id>', by_category),
     path('advertisement/<int:ad_id>', advertisement),
     path('add/advertisement', add_advertisement),
     path('user/<int:user_id>', user)
