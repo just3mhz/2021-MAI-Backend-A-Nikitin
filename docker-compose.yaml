@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    env_file:
+      - ./.env.dev
+  webapp:
+    build: ./craigslist
+    command: gunicorn craigslist.wsgi:application --bind 0.0.0.0:8000
+    depends_on:
+      - postgres
+    volumes:
+      - static_volume:/app/static
+    expose:
+      - 8000
+    env_file:
+      - ./.env.dev
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+    depends_on:
+      - webapp
+    volumes:
+      - static_volume:/app/static
+
+volumes:
+  postgres_volume:
+  static_volume:

@@ -8,3 +8,4 @@ venv/
 
 craigslist/db.sqlite3
 
+.env.dev
