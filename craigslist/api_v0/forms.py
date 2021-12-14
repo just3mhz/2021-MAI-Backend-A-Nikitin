@@ -1,5 +1,8 @@
 from django import forms
 
+from .models import User
+from .models import Category
+
 
 class AdvertisementForm(forms.Form):
     title = forms.CharField(label="Title", max_length=60)
@@ -7,6 +10,5 @@ class AdvertisementForm(forms.Form):
     price = forms.IntegerField(label="Price")
     pub_date = forms.DateField(label="Publication date")
     published = forms.BooleanField(label="Published")
-
-    category_id = forms.IntegerField(label="Category")
-    user_id = forms.IntegerField(label="User")
+    category = forms.ModelChoiceField(Category.objects.all(), label="User")
+    user = forms.ModelChoiceField(User.objects.all(), label="Category")
