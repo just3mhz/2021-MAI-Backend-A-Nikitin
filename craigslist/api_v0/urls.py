@@ -1,13 +1,16 @@
 from django.urls import path
+from django.urls import include
+from rest_framework.routers import DefaultRouter
 
-from .views import by_category
-from .views import advertisement
-from .views import add_advertisement
-from .views import user
+from .views import UserViewSet
+from .views import CategoryViewSet
+from .views import AdvertisementViewSet
+
+router = DefaultRouter()
+router.register(r'users', UserViewSet)
+router.register(r'categories', CategoryViewSet)
+router.register(r'advertisements', AdvertisementViewSet)
 
 urlpatterns = [
-    path('category/<int:category_id>', by_category),
-    path('advertisement/<int:ad_id>', advertisement),
-    path('add/advertisement', add_advertisement),
-    path('user/<int:user_id>', user)
+    path('', include(router.urls)),
 ]

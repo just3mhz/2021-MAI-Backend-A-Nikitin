@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Add new adv</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+<p>Add new advertisement</p>
+<form id="advertisement_submit_form" action="/api/v0/advertisements/" method="post">
+    {% csrf_token %}
+
+    <p>
+        <label for="title_input">Title</label>
+        <input type="text" id="title_input" name="title">
+    </p>
+
+    <p>
+        <label for="description_input">Description</label>
+        <input type="text" id="description_input" name="description">
+    </p>
+
+    <p>
+        <label for="price_input">Price</label>
+        <input type="number" id="price_input" name="price">
+    </p>
+
+     <p>
+        <label for="date_input">Date</label>
+        <input type="date" id="date_input" name="pub_date">
+    </p>
+
+    <p>
+        <label for="published_input">Published</label>
+        <input type="checkbox" id="published_input" name="published">
+    </p>
+
+    <p>
+        <label for="category_input">Category</label>
+        <input type="number" id="category_input" name="category">
+    </p>
+
+    <p>
+        <label for="user_input">User</label>
+        <input type="number" id="user_input" name="user">
+    </p>
+
+    <input type="submit" value="Submit">
+</form>
+
+<script>
+    $(document).ready($("#advertisement_submit_form").submit(function(e) {
+        e.preventDefault();
+
+        const form = $("#advertisement_submit_form");
+        const url = form.attr('action')
+
+        $.ajax({
+           type: "POST",
+           url: url,
+           data: form.serialize(),
+           success: function(data) {
+               window.location.href = `/web/advertisements/${data.advertisement_id}`
+           },
+           error: function (data) {
+               alert(JSON.stringify(data.responseJSON, null, '\t'))
+           }
+        });
+    }));
+</script>
+
+</body>
+
+</html>

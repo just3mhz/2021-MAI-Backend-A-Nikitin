@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Advertisements</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div id="advertisement"></div>
+</body>
+<script>
+    $(document).ready(function () {
+        $.getJSON('/api/v0/advertisements/{{ advertisement_id }}', {}, function (json) {
+            $('#advertisement').append(`<p>${json.title}</p>`)
+                .append(`<p>${json.description}</p>`)
+        })
+    })
+</script>
+</html>
