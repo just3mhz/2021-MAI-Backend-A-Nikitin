@@ -19,6 +19,8 @@ services:
       - 8000
     env_file:
       - ./.env.dev
+      - ./.env.vk_oauth2
+      - ./.env.google_oauth2
   nginx:
     build: ./nginx
     ports:

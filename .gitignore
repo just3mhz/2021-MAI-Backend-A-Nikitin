@@ -9,4 +9,5 @@ venv/
 craigslist/db.sqlite3
 
 .env.dev
-
+.env.vk_oauth2
+.env.google_oauth2

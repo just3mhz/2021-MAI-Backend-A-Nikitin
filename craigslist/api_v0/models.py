@@ -1,16 +1,9 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
-class User(models.Model):
-    user_id = models.AutoField(primary_key=True)
-
-    first_name = models.CharField(max_length=60)
-    second_name = models.CharField(max_length=60)
-    phone = models.CharField(max_length=20)
-    reg_date = models.DateField()
-
-    def __str__(self):
-        return f'{self.first_name} {self.second_name}'
+class User(AbstractUser):
+    advertisements = models.IntegerField(default=0)
 
 
 class Category(models.Model):
