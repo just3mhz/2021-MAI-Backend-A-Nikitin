@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.test import TestCase
 
 from rest_framework import status
@@ -61,3 +63,51 @@ class TestCategoryView(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, expected.data)
+
+
+class TestAdvertisementView(TestCase):
+    fixtures = ['category_fixture.json',
+                'user_fixture.json',
+                'advertisement_fixture.json']
+
+    def setUp(self) -> None:
+        pass
+
+    def test_get_all_advertisements(self) -> None:
+        response = self.client.get('/api/v0/advertisements/')
+        expected = AdvertisementSerializer(
+            Advertisement.objects.all().order_by('-pub_date'), many=True)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected.data)
+
+    def test_retrieve_advertisement(self) -> None:
+        response = self.client.get('/api/v0/advertisements/1/')
+        expected = AdvertisementSerializer(
+            Advertisement.objects.get(pk=1))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected.data)
+
+    def test_create_advertisement(self) -> None:
+        request_data = {
+            "title": "New advertisement",
+            "description": "Useful description",
+            "price": 0,
+            "pub_date": datetime.now().date(),
+            "published": True,
+            "user": 0,
+            "category": 0
+        }
+
+        response = self.client.post('/api/v0/advertisements/', request_data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        advertisement = Advertisement.objects.get(pk=response.data["advertisement_id"])
+        self.assertEqual(request_data["title"], advertisement.title)
+        self.assertEqual(request_data["pub_date"], advertisement.pub_date)
+
+    def test_delete_advertisement(self) -> None:
+        response = self.client.delete('/api/v0/advertisements/0/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertRaises(Advertisement.DoesNotExist, Advertisement.objects.get, pk=0)
