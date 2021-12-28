@@ -5,6 +5,9 @@ from django.test import TestCase
 
 from rest_framework import status
 
+from factory.django import DjangoModelFactory
+from factory import Faker
+
 from ..models import User
 from ..models import Category
 from ..models import Advertisement
@@ -15,10 +18,19 @@ from ..serializers import AdvertisementSerializer
 
 
 class TestUserView(TestCase):
-    fixtures = ['user_fixture.json']
+    class UserFactory(DjangoModelFactory):
+        class Meta:
+            model = User
+
+        username = Faker('email')
+        first_name = Faker('first_name')
+        last_name = Faker('last_name')
+        email = Faker('email')
+        password = Faker('password')
 
     def setUp(self) -> None:
-        pass
+        for _ in range(10):
+            user = TestUserView.UserFactory()
 
     def test_get_all_users(self) -> None:
         response = self.client.get('/api/v0/users/')
@@ -37,7 +49,7 @@ class TestUserView(TestCase):
         self.assertEqual(response.data, expected.data)
 
     def test_user_not_found(self) -> None:
-        response = self.client.get('/api/v0/users/2/')
+        response = self.client.get('/api/v0/users/404/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
