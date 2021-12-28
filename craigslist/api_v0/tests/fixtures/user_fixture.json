@@ -1,0 +1,25 @@
+[
+  {
+    "model": "api_v0.user",
+    "pk": 0,
+    "fields": {
+      "username": "just3mhz",
+      "first_name": "Andrey",
+      "last_name": "Nikitin",
+      "password": "bla-bla-bla",
+      "email": "just3mhz@gmail.com"
+    }
+  },
+
+  {
+    "model": "api_v0.user",
+    "pk": 1,
+    "fields": {
+      "username": "atmopunk",
+      "first_name": "Dmitriy",
+      "last_name": "Ivanov",
+      "password": "bla-bla-bla",
+      "email": "atmopunk@gmail.com"
+    }
+  }
+]
