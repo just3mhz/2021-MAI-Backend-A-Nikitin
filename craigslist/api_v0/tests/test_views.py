@@ -1,4 +1,5 @@
 from datetime import datetime
+from unittest import mock
 
 from django.test import TestCase
 
@@ -106,6 +107,22 @@ class TestAdvertisementView(TestCase):
         advertisement = Advertisement.objects.get(pk=response.data["advertisement_id"])
         self.assertEqual(request_data["title"], advertisement.title)
         self.assertEqual(request_data["pub_date"], advertisement.pub_date)
+
+    @mock.patch("api_v0.forms.AdvertisementForm.is_valid", return_value=False)
+    def test_create_advertisement_wrong_data(self, mocked) -> None:
+        request_data = {
+            "title": "New advertisement",
+            "description": "Useful description",
+            "price": 0,
+            "pub_date": datetime.now().date(),
+            "published": True,
+            "user": 0,
+            "category": 0
+        }
+
+        response = self.client.post('/api/v0/advertisements/', request_data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {"errors": {}})
 
     def test_delete_advertisement(self) -> None:
         response = self.client.delete('/api/v0/advertisements/0/')
