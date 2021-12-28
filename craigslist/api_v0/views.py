@@ -14,7 +14,7 @@ from .forms import AdvertisementForm
 
 
 class UserViewSet(ModelViewSet):
-    queryset = User.objects.all().order_by('-reg_date')
+    queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
 
 

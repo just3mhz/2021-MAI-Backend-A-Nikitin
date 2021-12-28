@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+</head>
+<body>
+    <h1>OAuth2 Авторизация</h1>
+    <button>
+        <a href="{% url 'social:begin' 'vk-oauth2' %}">Login Via VK</a>
+    </button>
+
+    <button>
+        <a href="{% url 'social:begin' 'google-oauth2' %}">Login Via Google</a>
+    </button>
+</body>
+</html>

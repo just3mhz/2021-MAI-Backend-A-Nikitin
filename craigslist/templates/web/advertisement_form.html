@@ -9,6 +9,8 @@
 
 <body>
 
+<button><a href="/web/logout">Logout</a></button>
+
 <p>Add new advertisement</p>
 <form id="advertisement_submit_form" action="/api/v0/advertisements/" method="post">
     {% csrf_token %}
@@ -43,11 +45,6 @@
         <input type="number" id="category_input" name="category">
     </p>
 
-    <p>
-        <label for="user_input">User</label>
-        <input type="number" id="user_input" name="user">
-    </p>
-
     <input type="submit" value="Submit">
 </form>
 
@@ -57,11 +54,10 @@
 
         const form = $("#advertisement_submit_form");
         const url = form.attr('action')
-
         $.ajax({
            type: "POST",
            url: url,
-           data: form.serialize(),
+           data: form.serialize() + "&user=" + {{ user.pk }},
            success: function(data) {
                window.location.href = `/web/advertisements/${data.advertisement_id}`
            },
