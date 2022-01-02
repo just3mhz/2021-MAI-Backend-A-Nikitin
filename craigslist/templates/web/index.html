@@ -21,8 +21,9 @@
     $(document).ready(function () {
         $.getJSON('/api/v0/advertisements', {}, function (json) {
             for (const i in json) {
-                const link = `/web/advertisements/${json[i].advertisement_id}`
-                $('#advertisement_list').append(`<p><a href="${link}">${json[i].title}</a></p>`)
+                const a_id = json[i].advertisement_id
+                const link = `/web/advertisements/${a_id}`
+                $('#advertisement_list').append(`<p><a href="${link}" id="adv_${a_id}">${json[i].title}</a></p>`)
             }
         })
     })

@@ -1,0 +1,41 @@
+[
+  {
+    "model": "api_v0.advertisement",
+    "pk": 0,
+    "fields": {
+      "user": 0,
+      "category": 0,
+      "title": "Title1",
+      "description": "Description1",
+      "price": 10000,
+      "pub_date": "2021-12-20",
+      "published": true
+    }
+  },
+  {
+    "model": "api_v0.advertisement",
+    "pk": 1,
+    "fields": {
+      "user": 0,
+      "category": 1,
+      "title": "Title2",
+      "description": "Description2",
+      "price": 20000,
+      "pub_date": "2021-12-21",
+      "published": true
+    }
+  },
+  {
+    "model": "api_v0.advertisement",
+    "pk": 2,
+    "fields": {
+      "user": 1,
+      "category": 1,
+      "title": "Title3",
+      "description": "Description3",
+      "price": 30000,
+      "pub_date": "2021-12-22",
+      "published": true
+    }
+  }
+]

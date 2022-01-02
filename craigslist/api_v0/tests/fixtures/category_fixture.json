@@ -1,0 +1,23 @@
+[
+  {
+    "model": "api_v0.category",
+    "pk": 0,
+    "fields": {
+      "category": "Недвижимость"
+    }
+  },
+  {
+    "model": "api_v0.category",
+    "pk": 1,
+    "fields": {
+      "category": "Автомобили"
+    }
+  },
+  {
+    "model": "api_v0.category",
+    "pk": 2,
+    "fields": {
+      "category": "Бытовая техника"
+    }
+  }
+]

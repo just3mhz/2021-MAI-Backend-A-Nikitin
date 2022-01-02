@@ -109,3 +109,7 @@ LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
 AUTH_USER_MODEL = "api_v0.User"
+
+FIXTURE_DIRS = [
+    os.path.join(BASE_DIR, 'api_v0/tests/fixtures')
+]
