@@ -29,3 +29,9 @@ def advertisement(request: HttpRequest, advertisement_id: int):
 @login_required
 def add_advertisement(request: HttpRequest):
     return render(request, 'web/advertisement_form.html', {'user': request.user})
+
+
+@require_http_methods(["GET"])
+@login_required
+def search_view(request: HttpRequest):
+    return render(request, 'web/search_advertisements.html')
