@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <p>
+        <label for="search_input">Search</label>
+        <input type="text" id="search_input" name="search">
+    </p>
+
+    <p>
+        <input type="submit" value="Submit" onclick="submit_query()">
+    </p>
+
+    <div id="advertisement_list"></div>
+</body>
+
+<script>
+    submit_query = function() {
+        const q = document.getElementById('search_input').value
+        console.log(q)
+        const url = `/api/v0/search/advertisements/${q}/`
+        $.ajax({
+           type: "GET",
+           url: url,
+           data:"",
+           success: function(data) {
+                const lst = $('#advertisement_list')
+                lst.html("")
+                for (const i in data) {
+                    const a_id = data[i].advertisement_id
+                    const link = `/web/advertisements/${a_id}`
+                    lst.append(`<p><a href="${link}" id="adv_${a_id}">${data[i].title}</a></p>`)
+                }
+           },
+           error: function (data) {
+               console.log(data)
+           }
+        });
+    }
+</script>
+
+</html>

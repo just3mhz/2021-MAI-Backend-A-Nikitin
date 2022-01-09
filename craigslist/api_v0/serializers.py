@@ -1,8 +1,12 @@
 from rest_framework import serializers
 
+from rest_framework_elasticsearch import es_serializer
+
 from .models import User
 from .models import Category
 from .models import Advertisement
+
+from .documents import AdvertisementDocument
 
 
 class UserSerializer(serializers.ModelSerializer):
