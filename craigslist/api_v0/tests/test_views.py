@@ -31,6 +31,7 @@ class TestUserView(TestCase):
     def setUp(self) -> None:
         for _ in range(10):
             user = TestUserView.UserFactory()
+            user.save()
 
     def test_get_all_users(self) -> None:
         response = self.client.get('/api/v0/users/')
