@@ -1,8 +1,9 @@
-import json
+import json, sys
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.viewsets import ReadOnlyModelViewSet
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from elasticsearch_dsl import Q
@@ -20,11 +21,29 @@ from .serializers import AdvertisementSerializer
 from .documents import AdvertisementDocument
 
 from .forms import AdvertisementForm
+from .forms import UserUploadPhotoForm
 
 from craigslist.settings import DEFAULT_CACHE_TTL
 
 
-class UserViewSet(ModelViewSet):
+@api_view(['POST'])
+def upload_profile_photo(request, user_id, *args, **kwargs):
+    form = UserUploadPhotoForm(request.POST, request.FILES)
+    if not form.is_valid():
+        return Response({'errors': form.errors}, status=400)
+
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return Response('User doesn\'t exist', status=404)
+
+    user.profile_image = request.FILES['upload_photo']
+    user.save()
+
+    return Response(UserSerializer(user).data, status=200)
+
+
+class UserViewSet(ReadOnlyModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
 

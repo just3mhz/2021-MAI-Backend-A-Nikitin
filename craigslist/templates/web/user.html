@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+{% if current_user.pk == viewed_user_id %}
+    <form id="upload_photo_form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" accept="image/*" name="upload_photo" id="upload_photo">
+        <input type="submit" value="Submit">
+    </form>
+{% endif %}
+
+<div id="user_info">
+    <div id="username"></div>
+    <div id="last_login"></div>
+    <img id="profile_image" src="data:," alt>
+</div>
+
+</body>
+
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function update_profile_info(profile) {
+        $('#username').html(`<b>Username</b> ${profile.username}`)
+        $('#last_login').html(`<b>Last login</b> ${profile.last_login}`)
+        $('#profile_image').attr('src', profile.profile_image)
+    }
+
+
+    $(document).ready(function () {
+        $.ajax({
+            type: 'GET',
+            url: `/api/v0/users/${ {{viewed_user_id}} }/`,
+            success: function(data) {
+                update_profile_info(data)
+            },
+            error: function (data) {
+            }
+        });
+    })
+
+    {% if current_user.pk == viewed_user_id %}
+        $(document).ready($("#upload_photo_form").submit(function(e) {
+            e.preventDefault();
+            const formData = new FormData()
+            const files = $('#upload_photo')[0].files
+
+            if (files.length > 0) {
+                formData.append('upload_photo', files[0])
+            } else {
+                alert('No file selected')
+                return
+            }
+
+            const csrftoken = getCookie('csrftoken');
+            formData.append('csrfmiddlewaretoken', csrftoken)
+
+            $.ajax({
+                type: "POST",
+                url: `/api/v0/users/${ {{viewed_user_id}} }/photos/`,
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    update_profile_info(data)
+                },
+                error: function (data) {
+                    alert(JSON.stringify(data.responseJSON, null, '\t'))
+                }
+            });
+        }));
+    {% endif %}
+</script>
+
+<style>
+    img{
+        width:100%;
+        max-width:300px;
+    }
+</style>
+
+</html>
