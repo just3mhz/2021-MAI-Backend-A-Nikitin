@@ -1,9 +1,17 @@
+from os import path
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
+def upload_path(instance, filename):
+    return path.join('users', instance.username, filename)
+
+
 class User(AbstractUser):
     advertisements = models.IntegerField(default=0)
+    profile_image = models.ImageField(
+        null=True, upload_to=upload_path)
 
 
 class Category(models.Model):

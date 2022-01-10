@@ -6,6 +6,7 @@ from .views import advertisement
 from .views import add_advertisement
 from .views import login_view
 from .views import search_view
+from .views import user_view
 
 urlpatterns = [
     path('', index, name="home"),
@@ -14,4 +15,5 @@ urlpatterns = [
     path('search/', search_view),
     path('login', login_view, name='login'),
     path('logout', LogoutView.as_view(), name='logout'),
+    path('users/<int:user_id>', user_view)
 ]
