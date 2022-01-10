@@ -2,6 +2,12 @@
 
 ![](./media/craigslist_er_diagram.png "ER-diagram")
 
+## LAB-8
+
+Страница пользователя, фото профиля хранится в Yandex Object Storage
+
+![](./media/user_page.png "Страница пользователя")
+
 ## LAB-10 (Авторизация)
 
 Страница авторизации
