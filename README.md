@@ -2,6 +2,20 @@
 
 ![](./media/craigslist_er_diagram.png "ER-diagram")
 
+## LAB-10 (Авторизация)
+
+Страница авторизации
+
+![](./media/auth_page.png "Страница авторизации")
+
+Страница от пользователя-клиента
+
+![](./media/page_for_client.png "Страница от лица клиента")
+
+Страница от пользователя-автора
+
+![](./media/page_for_author.png "Страница от лица автора")
+
 ## LAB-11 (Elasticsearch, Redis и расстояние Левенштейна)
 
 Elasticsearh - поиск по объявлениям, используется библиотека ```django_elasticsearch_dsl```
