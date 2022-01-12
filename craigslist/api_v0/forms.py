@@ -3,6 +3,7 @@ from django.core.files import images
 
 from .models import User
 from .models import Category
+from .models import Advertisement
 
 
 class AdvertisementForm(forms.Form):
@@ -35,3 +36,8 @@ class UserUploadPhotoForm(forms.Form):
             pass
 
         return upload_photo
+
+
+class CommentForm(forms.Form):
+    comment = forms.CharField(label="Comment Message", max_length=1000)
+

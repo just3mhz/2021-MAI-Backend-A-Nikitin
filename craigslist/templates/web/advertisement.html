@@ -4,12 +4,22 @@
     <meta charset="UTF-8">
     <title>Advertisements</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/centrifugal/centrifuge-js@2.8.3/dist/centrifuge.min.js"></script>
 </head>
 <body>
 <button>
     <a href="/web/logout">Logout</a>
 </button>
 <div id="advertisement"></div>
+
+<div class="comments-block">
+    <p>Comments</p>
+    <ul id="comments-thread" class="comments-thread"></ul>
+    <div class="comment-message">
+        <input id="comment-message-input" class="comment-message-input" type="text" autofocus>
+        <input id="comment-message-submit" class="comment-message-submit" type="submit" value="Submit">
+    </div>
+</div>
 </body>
 <script>
     $(document).ready(function () {
@@ -28,5 +38,96 @@
             }
         })
     })
+
+    const commentsThread = document.querySelector('#comments-thread')
+
+    const centrifuge = new Centrifuge(`ws://${window.location.host}/connection/websocket`)
+    centrifuge.on('connect', function (ctx) {
+        console.log('connected', ctx)
+    })
+
+    centrifuge.on('disconnect', function (ctx) {
+        console.log('disconnect', ctx)
+    })
+
+    const sub = centrifuge.subscribe(`advertisements:${ {{ advertisement_id }} } }`, function (ctx) {
+        const newCommentElement = document.createElement('li')
+        const newCommentMessage = document.createTextNode(ctx.data.message)
+        newCommentElement.appendChild(newCommentMessage)
+        commentsThread.appendChild(newCommentElement)
+    })
+
+    centrifuge.connect()
+
+    const messageInput = document.querySelector("#comment-message-input")
+    messageInput.focus()
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function getComments() {
+        $.ajax({
+            type: 'GET',
+            url: `/api/v0/comments/advertisement/${ {{advertisement_id}} }`,
+            success: function(data) {
+                for (const i in data) {
+                    const newCommentElement = document.createElement('li')
+                    const newCommentMessage = document.createTextNode(data[i].comment)
+                    newCommentElement.appendChild(newCommentMessage)
+                    commentsThread.appendChild(newCommentElement)
+                }
+            },
+            error: function (data) {
+               console.log('Error while posting comment: ' + data.responseJson)
+            }
+        })
+    }
+    getComments()
+
+    function postMessage(message) {
+        csrftoken = getCookie('csrftoken')
+
+        const formData = new FormData()
+        formData.append('comment', message)
+        formData.append('csrfmiddlewaretoken', csrftoken)
+
+        $.ajax({
+            type: 'POST',
+            url: `/api/v0/comments/advertisement/${ {{advertisement_id}} }`,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(data) {
+               console.log('Posted successfully')
+            },
+            error: function (data) {
+               console.log('Error while posting comment: ' + data.responseJson)
+            }
+        })
+    }
+
+    const submitComment = document.querySelector("#comment-message-submit")
+    submitComment.onclick = function () {
+        const message = messageInput.value
+        if (!message) {
+            return
+        }
+        postMessage(message)
+        sub.publish({ 'message': message });
+        messageInput.value = ''
+    }
 </script>
 </html>

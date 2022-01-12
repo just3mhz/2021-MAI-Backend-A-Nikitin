@@ -1,12 +1,9 @@
 from rest_framework import serializers
 
-from rest_framework_elasticsearch import es_serializer
-
 from .models import User
 from .models import Category
 from .models import Advertisement
-
-from .documents import AdvertisementDocument
+from .models import Comment
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -25,4 +22,10 @@ class CategorySerializer(serializers.ModelSerializer):
 class AdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Advertisement
+        fields = '__all__'
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
         fields = '__all__'

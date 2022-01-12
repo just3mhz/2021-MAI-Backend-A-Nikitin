@@ -37,3 +37,12 @@ class Advertisement(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+
+class Comment(models.Model):
+    comment_id = models.AutoField(primary_key=True)
+    advertisement = models.ForeignKey(Advertisement, on_delete=models.CASCADE)
+    comment = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return f'#{self.advertisement.advertisement_id}-{self.comment_id}: {self.comment}'

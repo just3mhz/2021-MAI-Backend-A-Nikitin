@@ -13,15 +13,19 @@ from django.core.cache import cache
 from .models import User
 from .models import Category
 from .models import Advertisement
+from .models import Comment
 
 from .serializers import UserSerializer
 from .serializers import CategorySerializer
 from .serializers import AdvertisementSerializer
+from .serializers import CommentSerializer
 
 from .documents import AdvertisementDocument
 
 from .forms import AdvertisementForm
 from .forms import UserUploadPhotoForm
+from .forms import CommentForm
+
 
 from craigslist.settings import DEFAULT_CACHE_TTL
 
@@ -125,3 +129,28 @@ class SearchAdvertisements(APIView):
             return Response(serializer.data, status=200)
         except Exception as e:
             return Response(str(e), status=500)
+
+
+class Comments(APIView):
+    def get(self, request, advertisement_id):
+        comments = Comment.objects.filter(advertisement_id=advertisement_id)
+        serializer = CommentSerializer(comments, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, advertisement_id):
+        form = CommentForm(request.data)
+        if not form.is_valid():
+            return Response({"errors": form.errors}, status=400)
+        try:
+            advertisement = Advertisement.objects.get(pk=advertisement_id)
+        except Advertisement.DoesNotExist:
+            return Response('Advertisement not found', status=404)
+
+        comment = Comment.objects.create(
+            comment=form.cleaned_data['comment'],
+            advertisement=advertisement
+        )
+
+        comment.save()
+
+        return Response({'comment_id': comment.comment_id})
