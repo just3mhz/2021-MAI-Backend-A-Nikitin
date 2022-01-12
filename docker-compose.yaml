@@ -24,12 +24,23 @@ services:
       - 6379:6379
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+  centrifugo:
+    build: ./centrifugo
+    command: centrifugo -c config.json
+    ports:
+      - 8001:8001
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
   webapp:
     build: ./craigslist
     command: gunicorn craigslist.wsgi:application --bind 0.0.0.0:8000
     depends_on:
       - postgres
       - elasticsearch
+      - redis
+      - centrifugo
     volumes:
       - static_volume:/app/static
     ports:

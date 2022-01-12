@@ -1,0 +1,16 @@
+{
+    "port": 8001,
+    "allowed_origins": ["*"],
+    "proxy_connect_endpoint": "http://webapp:8000/centrifugo/connect/",
+    "proxy_publish_endpoint": "http://webapp:8000/centrifugo/publish/",
+    "proxy_subscribe_endpoint": "http://webapp:8000/centrifugo/subscribe/",
+    "proxy_http_headers": ["Cookie"],
+    "namespaces": [
+        {
+            "name": "advertisements",
+            "publish": true,
+            "proxy_publish": true,
+            "proxy_subscribe": true
+        }
+    ]
+}
